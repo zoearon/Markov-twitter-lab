@@ -67,7 +67,17 @@ def make_text(chains):
         words.append(word)
         key = (key[1], word)
 
-    return " ".join(words)
+    tweet_text = " ".join(words)
+    print tweet_text
+
+    count = 1
+    for i in tweet_text[-1::-1]:
+        count += 1
+        if i == '.':
+            tweet_text = tweet_text[:-count + 2]
+            break
+
+    return tweet_text
 
 
 def tweet(chains):
