@@ -83,8 +83,17 @@ def tweet(chains):
     print api.VerifyCredentials()
 
     status = api.PostUpdate(make_text(chains))
-
     print status.text
+
+    while True:
+        tweet_again = raw_input("Enter to tweet again, q to quit: ")
+
+        if tweet_again.lower() == 'q':
+            break
+        else:
+            status = api.PostUpdate(make_text(chains))
+            print status.text
+
 
 # Get the filenames from the user through a command line prompt, ex:
 # python markov.py green-eggs.txt shakespeare.txt
@@ -97,8 +106,8 @@ text = open_and_read_file(filenames)
 chains = make_chains(text)
 
 # Your task is to write a new function tweet, that will take chains as input
-#tweet(chains)
-print make_text(chains)
+tweet(chains)
+#print make_text(chains)
 
 # # Open the file and turn it into one long string
 # input_text = open_and_read_file(filenames)
