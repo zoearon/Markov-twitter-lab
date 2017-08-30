@@ -68,7 +68,6 @@ def make_text(chains):
         key = (key[1], word)
 
     tweet_text = " ".join(words)
-    print tweet_text
 
     count = 1
     for i in tweet_text[-1::-1]:
@@ -91,6 +90,13 @@ def tweet(chains):
         access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
     print api.VerifyCredentials()
+
+    last_tweet = str(api.GetUserTimeline(count=1))
+
+    for i in range(len(last_tweet)):
+        if last_tweet[i] == "'":
+            print "Your last tweet was: " + last_tweet[i+1:-3]
+            break
 
     status = api.PostUpdate(make_text(chains))
     print status.text
@@ -127,3 +133,9 @@ tweet(chains)
 
 # # Produce random text
 # random_text = make_text(chains)
+
+""" twitter.Api(
+        consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
+        consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
+        access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
+        access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET']).GetUserTimeline(count=1)"""
