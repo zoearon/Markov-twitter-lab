@@ -2,8 +2,8 @@
 import os
 import sys
 from random import choice
-import twitter
-
+#import twitter
+from twilio.rest import Client
 
 
 def open_and_read_file(file_path):
@@ -148,6 +148,18 @@ def tweet(chains):
             status = api.PostUpdate(make_text(chains, 2))
             print status.text
 
+def twilio(chains):
+    account=os.environ['TWILIO_ACCOUNT_SID']
+    token=os.environ['TWILIO_AUTH_TOKEN']
+
+    client = Client(account, token)
+    from_number = "+14153607260"
+    to_number = "+16502966997"
+    text_body = make_text(chains, 2)
+
+    message = client.messages.create(to=to_number, from_=from_number,body=text_body)
+
+    print text_body
 
 # python markov.py green-eggs.txt shakespeare.txt
 filenames = sys.argv[1:]
@@ -159,6 +171,7 @@ text = open_and_read_file(filenames)
 chains = make_chains(text, 2)
 
 # Your task is to write a new function tweet, that will take chains as input
-tweet(chains)
+#tweet(chains)
 
+twilio(chains)
 #print make_text(chains, 2)
