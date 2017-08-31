@@ -73,45 +73,48 @@ def make_chains(text_string, n_gram):
 
 def make_text(chains, n_gram):
     """Return text from chains."""
-    words = []
+    test = True
+    while test:
+        words = []
 
-    link_key = choice(chains.keys())
+        link_key = choice(chains.keys())
 
+        while True:
+            if link_key[0] != link_key[0].capitalize() or link_key[0].isalnum() is False:
+                link_key = choice(chains.keys())
+            else:
+                break
+        #have random key from our dict
+        counter = n_gram-1
 
-    while True:
-        if link_key[0] != link_key[0].capitalize():
-            link_key = choice(chains.keys())
-        else:
-            break
-    #have random key from our dict
-    counter = n_gram-1
+        words = list(link_key)
 
-    words = list(link_key)
+        for item in words:
+            counter += len(item)
 
-    for item in words:
-        counter += len(item)
+        while link_key in chains:
 
-    while link_key in chains:
+            word = choice(chains[link_key])
+            counter = counter + 1 + len(word)
+            if counter > 140:
+                break
+            words.append(word)
+            # link_key = (link_key[1], word)
 
-        word = choice(chains[link_key])
-        counter = counter + 1 + len(word)
-        if counter > 140:
-            break
-        words.append(word)
-        # link_key = (link_key[1], word)
+            next_key = list(link_key[1:]) + [word]
 
-        next_key = list(link_key[1:]) + [word]
+            link_key = tuple(next_key)
 
-        link_key = tuple(next_key)
+        tweet_text = " ".join(words)
 
-    tweet_text = " ".join(words)
-
-    count = 1
-    for i in tweet_text[-1::-1]:
-        count += 1
-        if i == '.':
-            tweet_text = tweet_text[:-count + 2]
-            break
+        count = 1
+        for i in tweet_text[-1::-1]:
+            count += 1
+            punctuation_list = ['.', '!', '?']
+            if i in punctuation_list:
+                tweet_text = tweet_text[:-count + 2]
+                test = False
+                break
 
     return tweet_text
 
@@ -128,13 +131,10 @@ def tweet(chains):
 
     print api.VerifyCredentials()
 
-    last_tweet = str(api.GetUserTimeline(count=1))
+    last_tweet = api.GetUserTimeline(count=1)[0]
 
-    for i in range(len(last_tweet)):
-        if last_tweet[i] == "'":
-            print "Your last tweet was: " + last_tweet[i+1:-3]
-            print
-            break
+    print "Your last tweet was: " + last_tweet.text
+    print
 
     status = api.PostUpdate(make_text(chains, 2))
     print status.text
@@ -145,7 +145,7 @@ def tweet(chains):
         if tweet_again.lower() == 'q':
             break
         else:
-            status = api.PostUpdate(make_text(chains))
+            status = api.PostUpdate(make_text(chains, 2))
             print status.text
 
 
@@ -160,3 +160,5 @@ chains = make_chains(text, 2)
 
 # Your task is to write a new function tweet, that will take chains as input
 tweet(chains)
+
+#print make_text(chains, 2)
