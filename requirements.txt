@@ -8,7 +8,7 @@ idna==2.6
 ipaddress==1.0.18
 pkg-resources==0.0.0
 pycparser==2.18
-PyJWT==1.5.2
+PyJWT==2.4.0
 pyOpenSSL==17.2.0
 pytz==2017.2
 requests==2.18.4
